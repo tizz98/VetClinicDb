@@ -160,14 +160,12 @@ Public Class frmVetClinicDb
     End Sub
 
     Private Sub txtIdNumber_TextChanged(sender As Object, e As EventArgs) Handles txtIdNumber.TextChanged
-        If Not txtIdNumber.Enabled Then
-            DbAdaptPets = New OleDbDataAdapter("SELECT * FROM Pets WHERE OwnerID = " & Trim(txtIdNumber.Text), DB_CONN_STR)
-            dsPets.Clear()
-            DbAdaptPets.Fill(dsPets, "Pets")
+        DbAdaptPets = New OleDbDataAdapter("SELECT * FROM Pets WHERE OwnerID = " & IIf(String.IsNullOrEmpty(txtIdNumber.Text), 0, Trim(txtIdNumber.Text)), DB_CONN_STR)
+        dsPets.Clear()
+        DbAdaptPets.Fill(dsPets, "Pets")
 
-            dgPets.DataSource = dsPets
-            dgPets.DataMember = "Pets"
-        End If
+        dgPets.DataSource = dsPets
+        dgPets.DataMember = "Pets"
     End Sub
 
     Private Sub dgPets_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgPets.CellBeginEdit
@@ -183,6 +181,67 @@ Public Class frmVetClinicDb
             conn.Open()
             DbAdaptPets.InsertCommand = cmdBuilder.GetInsertCommand
             DbAdaptPets.Update(dsPets, "Pets")
+        End Using
+    End Sub
+
+    Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
+        toggleEditState(True)
+
+        BindingContext(dsOwners, "Owners").EndCurrentEdit()
+        BindingContext(dsOwners, "Owners").AddNew()
+
+        dsPets.Clear()
+    End Sub
+
+    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+        Dim cmdBuilder As New OleDbCommandBuilder(DbAdaptOwners)
+
+        toggleEditState(False)
+
+        BindingContext(dsOwners, "Owners").EndCurrentEdit()
+
+        Using conn As New OleDbConnection(DB_CONN_STR)
+            conn.Open()
+            DbAdaptOwners.InsertCommand = cmdBuilder.GetInsertCommand
+            DbAdaptOwners.Update(dsOwners, "Owners")
+        End Using
+
+        dsOwners.AcceptChanges()
+    End Sub
+
+    Private Sub toggleEditState(canEdit As Boolean)
+        Dim textFields As TextBox() = {txtName, txtAddressStreet, txtAddressCity, txtAddressState, txtAddressZipcode, txtPhone, txtIdNumber}
+
+        For Each txtBox As TextBox In textFields
+            txtBox.Enabled = canEdit
+        Next
+
+        btnAdd.Visible = Not canEdit
+        btnDelete.Visible = Not canEdit
+        btnUpdate.Visible = Not canEdit
+
+        btnSave.Visible = canEdit
+        btnCancel.Visible = canEdit
+    End Sub
+
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        BindingContext(dsOwners, "Owners").CancelCurrentEdit()
+        toggleEditState(False)
+    End Sub
+
+    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        Dim dbCmd As OleDbCommand
+        Dim ownerId As String = Trim(txtIdNumber.Text)
+
+        Using conn As New OleDbConnection(DB_CONN_STR)
+            conn.Open()
+
+            dbCmd = New OleDbCommand("DELETE * FROM Pets WHERE OwnerID = " & ownerId, conn)
+            dbCmd.ExecuteNonQuery()
+
+            dbCmd = New OleDbCommand("DELETE * FROM Owners WHERE ID = " & ownerId, conn)
+            dbCmd.ExecuteNonQuery()
+
         End Using
     End Sub
 End Class

@@ -80,7 +80,7 @@ Partial Class frmVetClinicDb
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(413, 246)
+        Me.btnCancel.Location = New System.Drawing.Point(441, 245)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(98, 30)
         Me.btnCancel.TabIndex = 19
@@ -90,7 +90,7 @@ Partial Class frmVetClinicDb
         '
         'btnSave
         '
-        Me.btnSave.Location = New System.Drawing.Point(190, 246)
+        Me.btnSave.Location = New System.Drawing.Point(218, 245)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(98, 30)
         Me.btnSave.TabIndex = 18
