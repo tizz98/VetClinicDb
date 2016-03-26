@@ -158,4 +158,31 @@ Public Class frmVetClinicDb
     Private Sub btnLast_Click(sender As Object, e As EventArgs) Handles btnLast.Click
         BindingContext(dsOwners, "Owners").Position = (dsOwners.Tables("Owners").Rows.Count - 1)
     End Sub
+
+    Private Sub txtIdNumber_TextChanged(sender As Object, e As EventArgs) Handles txtIdNumber.TextChanged
+        If Not txtIdNumber.Enabled Then
+            DbAdaptPets = New OleDbDataAdapter("SELECT * FROM Pets WHERE OwnerID = " & Trim(txtIdNumber.Text), DB_CONN_STR)
+            dsPets.Clear()
+            DbAdaptPets.Fill(dsPets, "Pets")
+
+            dgPets.DataSource = dsPets
+            dgPets.DataMember = "Pets"
+        End If
+    End Sub
+
+    Private Sub dgPets_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgPets.CellBeginEdit
+        btnUpdatePetInfo.Visible = True
+    End Sub
+
+    Private Sub btnUpdatePetInfo_Click(sender As Object, e As EventArgs) Handles btnUpdatePetInfo.Click
+        Dim cmdBuilder As New OleDbCommandBuilder(DbAdaptPets)
+
+        btnUpdatePetInfo.Visible = False
+
+        Using conn As New OleDbConnection(DB_CONN_STR)
+            conn.Open()
+            DbAdaptPets.InsertCommand = cmdBuilder.GetInsertCommand
+            DbAdaptPets.Update(dsPets, "Pets")
+        End Using
+    End Sub
 End Class
