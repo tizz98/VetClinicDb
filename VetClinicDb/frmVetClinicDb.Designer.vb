@@ -43,10 +43,10 @@ Partial Class frmVetClinicDb
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.btnSave = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.dgPets = New System.Windows.Forms.DataGridView()
         Me.btnUpdatePetInfo = New System.Windows.Forms.Button()
         Me.grpOwnerInfo.SuspendLayout()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgPets, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'grpOwnerInfo
@@ -98,6 +98,7 @@ Partial Class frmVetClinicDb
         '
         'txtName
         '
+        Me.txtName.Enabled = False
         Me.txtName.Location = New System.Drawing.Point(93, 32)
         Me.txtName.Name = "txtName"
         Me.txtName.Size = New System.Drawing.Size(418, 20)
@@ -105,6 +106,7 @@ Partial Class frmVetClinicDb
         '
         'txtAddressStreet
         '
+        Me.txtAddressStreet.Enabled = False
         Me.txtAddressStreet.Location = New System.Drawing.Point(93, 65)
         Me.txtAddressStreet.Name = "txtAddressStreet"
         Me.txtAddressStreet.Size = New System.Drawing.Size(418, 20)
@@ -112,6 +114,7 @@ Partial Class frmVetClinicDb
         '
         'txtAddressCity
         '
+        Me.txtAddressCity.Enabled = False
         Me.txtAddressCity.Location = New System.Drawing.Point(93, 91)
         Me.txtAddressCity.Name = "txtAddressCity"
         Me.txtAddressCity.Size = New System.Drawing.Size(268, 20)
@@ -119,6 +122,7 @@ Partial Class frmVetClinicDb
         '
         'txtAddressState
         '
+        Me.txtAddressState.Enabled = False
         Me.txtAddressState.Location = New System.Drawing.Point(367, 91)
         Me.txtAddressState.Name = "txtAddressState"
         Me.txtAddressState.Size = New System.Drawing.Size(39, 20)
@@ -126,6 +130,7 @@ Partial Class frmVetClinicDb
         '
         'txtAddressZipcode
         '
+        Me.txtAddressZipcode.Enabled = False
         Me.txtAddressZipcode.Location = New System.Drawing.Point(412, 91)
         Me.txtAddressZipcode.Name = "txtAddressZipcode"
         Me.txtAddressZipcode.Size = New System.Drawing.Size(99, 20)
@@ -142,6 +147,7 @@ Partial Class frmVetClinicDb
         '
         'txtPhone
         '
+        Me.txtPhone.Enabled = False
         Me.txtPhone.Location = New System.Drawing.Point(93, 129)
         Me.txtPhone.Name = "txtPhone"
         Me.txtPhone.Size = New System.Drawing.Size(418, 20)
@@ -158,6 +164,7 @@ Partial Class frmVetClinicDb
         '
         'txtIdNumber
         '
+        Me.txtIdNumber.Enabled = False
         Me.txtIdNumber.Location = New System.Drawing.Point(635, 32)
         Me.txtIdNumber.Name = "txtIdNumber"
         Me.txtIdNumber.Size = New System.Drawing.Size(77, 20)
@@ -246,15 +253,15 @@ Partial Class frmVetClinicDb
         Me.btnCancel.UseVisualStyleBackColor = True
         Me.btnCancel.Visible = False
         '
-        'DataGridView1
+        'dgPets
         '
-        Me.DataGridView1.AllowUserToDeleteRows = False
-        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Location = New System.Drawing.Point(13, 311)
-        Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.ReadOnly = True
-        Me.DataGridView1.Size = New System.Drawing.Size(728, 225)
-        Me.DataGridView1.TabIndex = 1
+        Me.dgPets.AllowUserToDeleteRows = False
+        Me.dgPets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgPets.Location = New System.Drawing.Point(13, 311)
+        Me.dgPets.Name = "dgPets"
+        Me.dgPets.ReadOnly = True
+        Me.dgPets.Size = New System.Drawing.Size(728, 225)
+        Me.dgPets.TabIndex = 1
         '
         'btnUpdatePetInfo
         '
@@ -272,13 +279,13 @@ Partial Class frmVetClinicDb
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(756, 591)
         Me.Controls.Add(Me.btnUpdatePetInfo)
-        Me.Controls.Add(Me.DataGridView1)
+        Me.Controls.Add(Me.dgPets)
         Me.Controls.Add(Me.grpOwnerInfo)
         Me.Name = "frmVetClinicDb"
         Me.Text = "Mr. Pebble's Veterinary Clinic"
         Me.grpOwnerInfo.ResumeLayout(False)
         Me.grpOwnerInfo.PerformLayout()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgPets, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -304,6 +311,6 @@ Partial Class frmVetClinicDb
     Friend WithEvents btnNext As Button
     Friend WithEvents btnPrevious As Button
     Friend WithEvents btnFirst As Button
-    Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents dgPets As DataGridView
     Friend WithEvents btnUpdatePetInfo As Button
 End Class
