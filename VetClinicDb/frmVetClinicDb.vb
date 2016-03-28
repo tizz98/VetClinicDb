@@ -160,16 +160,28 @@ Public Class frmVetClinicDb
     End Sub
 
     Private Sub txtIdNumber_TextChanged(sender As Object, e As EventArgs) Handles txtIdNumber.TextChanged
-        DbAdaptPets = New OleDbDataAdapter("SELECT * FROM Pets WHERE OwnerID = " & IIf(String.IsNullOrEmpty(txtIdNumber.Text), 0, Trim(txtIdNumber.Text)), DB_CONN_STR)
-        dsPets.Clear()
-        DbAdaptPets.Fill(dsPets, "Pets")
+        If Not String.IsNullOrEmpty(txtIdNumber.Text) Then
+            DbAdaptPets = New OleDbDataAdapter("SELECT * FROM Pets WHERE OwnerID = " & IIf(String.IsNullOrEmpty(txtIdNumber.Text), 0, Trim(txtIdNumber.Text)), DB_CONN_STR)
+            dsPets.Clear()
+            DbAdaptPets.Fill(dsPets, "Pets")
 
-        dgPets.DataSource = dsPets
-        dgPets.DataMember = "Pets"
+            dgPets.DataSource = dsPets
+            dgPets.DataMember = "Pets"
+
+            btnDelete.Enabled = True
+            btnUpdate.Enabled = True
+        Else
+            btnDelete.Enabled = False
+            btnUpdate.Enabled = False
+        End If
     End Sub
 
     Private Sub dgPets_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgPets.CellBeginEdit
         btnUpdatePetInfo.Visible = True
+
+        If String.IsNullOrEmpty(txtIdNumber.Text) Then
+            e.Cancel = True
+        End If
     End Sub
 
     Private Sub btnUpdatePetInfo_Click(sender As Object, e As EventArgs) Handles btnUpdatePetInfo.Click
@@ -230,18 +242,31 @@ Public Class frmVetClinicDb
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Dim dbCmd As OleDbCommand
-        Dim ownerId As String = Trim(txtIdNumber.Text)
+        If Not String.IsNullOrEmpty(txtIdNumber.Text) Then
+            Dim dbCmd As OleDbCommand
+            Dim ownerId As String = Trim(txtIdNumber.Text)
 
-        Using conn As New OleDbConnection(DB_CONN_STR)
-            conn.Open()
+            BindingContext(dsOwners, "Owners").Position = (BindingContext(dsOwners, "Owners").Position + 1)
 
-            dbCmd = New OleDbCommand("DELETE * FROM Pets WHERE OwnerID = " & ownerId, conn)
-            dbCmd.ExecuteNonQuery()
+            Using conn As New OleDbConnection(DB_CONN_STR)
+                conn.Open()
 
-            dbCmd = New OleDbCommand("DELETE * FROM Owners WHERE ID = " & ownerId, conn)
-            dbCmd.ExecuteNonQuery()
+                dbCmd = New OleDbCommand("DELETE * FROM Pets WHERE OwnerID = " & ownerId, conn)
+                dbCmd.ExecuteNonQuery()
 
-        End Using
+                dsPets.Clear()
+
+                dbCmd = New OleDbCommand("DELETE * FROM Owners WHERE ID = " & ownerId, conn)
+                dbCmd.ExecuteNonQuery()
+            End Using
+
+            dsOwners.Clear()
+            DbAdaptOwners = New OleDbDataAdapter("Select * From Owners", DB_CONN_STR)
+            DbAdaptOwners.Fill(dsOwners, "Owners")
+        End If
+    End Sub
+
+    Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+        toggleEditState(True)
     End Sub
 End Class
