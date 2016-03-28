@@ -472,8 +472,6 @@ Public Class frmVetClinicDb
                 reader = query.ExecuteReader()
 
                 If reader.HasRows And Not txtIdNumber.Text = updatingId Then
-                    Debug.WriteLine(txtIdNumber.Text)
-                    Debug.WriteLine(updatingId)
                     errIdNumber.SetError(txtIdNumber, "ID already taken, please choose a different one.")
                 Else
                     errIdNumber.SetError(txtIdNumber, Nothing)
