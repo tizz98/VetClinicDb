@@ -448,7 +448,7 @@ Public Class frmVetClinicDb
     '------------------------------------------------------------
     Private Sub txtIdNumber_TextChanged(sender As Object, e As EventArgs) Handles txtIdNumber.TextChanged
         If Not String.IsNullOrEmpty(txtIdNumber.Text) And Not txtIdNumber.Enabled Then
-            DbAdaptPets = New OleDbDataAdapter("SELECT * FROM Pets WHERE OwnerID = " & IIf(String.IsNullOrEmpty(txtIdNumber.Text), 0, Trim(txtIdNumber.Text)), DB_CONN_STR)
+            DbAdaptPets = New OleDbDataAdapter("SELECT * FROM Pets WHERE OwnerID = " & Trim(txtIdNumber.Text), DB_CONN_STR)
             dsPets.Clear()
             DbAdaptPets.Fill(dsPets, "Pets")
 
@@ -472,9 +472,13 @@ Public Class frmVetClinicDb
                 reader = query.ExecuteReader()
 
                 If reader.HasRows And Not txtIdNumber.Text = updatingId Then
-                    errIdNumber.SetError(txtIdNumber, "Id already taken, please choose a different one.")
+                    Debug.WriteLine(txtIdNumber.Text)
+                    Debug.WriteLine(updatingId)
+                    errIdNumber.SetError(txtIdNumber, "ID already taken, please choose a different one.")
                 Else
                     errIdNumber.SetError(txtIdNumber, Nothing)
+                    btnDelete.Enabled = True
+                    btnUpdate.Enabled = True
                 End If
             End Using
         End If
@@ -660,10 +664,9 @@ Public Class frmVetClinicDb
     '- (None)                                                   -
     '------------------------------------------------------------
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        BindingContext(dsOwners, "Owners").CancelCurrentEdit()
-        toggleEditState(False)
-
         updatingId = Nothing
+        toggleEditState(False)
+        BindingContext(dsOwners, "Owners").CancelCurrentEdit()
     End Sub
 
     '------------------------------------------------------------
