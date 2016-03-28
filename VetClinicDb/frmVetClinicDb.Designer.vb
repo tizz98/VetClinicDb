@@ -22,6 +22,7 @@ Partial Class frmVetClinicDb
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.grpOwnerInfo = New System.Windows.Forms.GroupBox()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnSave = New System.Windows.Forms.Button()
@@ -45,8 +46,10 @@ Partial Class frmVetClinicDb
         Me.lblName = New System.Windows.Forms.Label()
         Me.dgPets = New System.Windows.Forms.DataGridView()
         Me.btnUpdatePetInfo = New System.Windows.Forms.Button()
+        Me.errIdNumber = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.grpOwnerInfo.SuspendLayout()
         CType(Me.dgPets, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.errIdNumber, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'grpOwnerInfo
@@ -273,6 +276,10 @@ Partial Class frmVetClinicDb
         Me.btnUpdatePetInfo.UseVisualStyleBackColor = True
         Me.btnUpdatePetInfo.Visible = False
         '
+        'errIdNumber
+        '
+        Me.errIdNumber.ContainerControl = Me
+        '
         'frmVetClinicDb
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -286,6 +293,7 @@ Partial Class frmVetClinicDb
         Me.grpOwnerInfo.ResumeLayout(False)
         Me.grpOwnerInfo.PerformLayout()
         CType(Me.dgPets, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.errIdNumber, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -313,4 +321,5 @@ Partial Class frmVetClinicDb
     Friend WithEvents btnFirst As Button
     Friend WithEvents dgPets As DataGridView
     Friend WithEvents btnUpdatePetInfo As Button
+    Friend WithEvents errIdNumber As ErrorProvider
 End Class

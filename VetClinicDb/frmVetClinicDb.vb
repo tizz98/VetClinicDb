@@ -12,6 +12,8 @@ Public Class frmVetClinicDb
     Private DbAdaptOwners As OleDbDataAdapter
     Private DbAdaptPets As OleDbDataAdapter
 
+    Private updatingId As String
+
     Private Sub frmVetClinicDb_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Delete database if it exists
         If File.Exists(DATABASE_NAME) Then
@@ -160,7 +162,7 @@ Public Class frmVetClinicDb
     End Sub
 
     Private Sub txtIdNumber_TextChanged(sender As Object, e As EventArgs) Handles txtIdNumber.TextChanged
-        If Not String.IsNullOrEmpty(txtIdNumber.Text) Then
+        If Not String.IsNullOrEmpty(txtIdNumber.Text) And Not txtIdNumber.Enabled Then
             DbAdaptPets = New OleDbDataAdapter("SELECT * FROM Pets WHERE OwnerID = " & IIf(String.IsNullOrEmpty(txtIdNumber.Text), 0, Trim(txtIdNumber.Text)), DB_CONN_STR)
             dsPets.Clear()
             DbAdaptPets.Fill(dsPets, "Pets")
@@ -170,9 +172,26 @@ Public Class frmVetClinicDb
 
             btnDelete.Enabled = True
             btnUpdate.Enabled = True
-        Else
+        ElseIf String.IsNullOrEmpty(txtIdNumber.Text) Then
             btnDelete.Enabled = False
             btnUpdate.Enabled = False
+        ElseIf txtIdNumber.Enabled And Not String.IsNullOrEmpty(txtIdNumber.Text) Then
+            Using conn As New OleDbConnection(DB_CONN_STR)
+                conn.Open()
+
+                Dim query As New OleDbCommand()
+                Dim reader As OleDbDataReader
+
+                query.CommandText = "SELECT * FROM Owners WHERE ID = " & txtIdNumber.Text
+                query.Connection = conn
+                reader = query.ExecuteReader()
+
+                If reader.HasRows And Not txtIdNumber.Text = updatingId Then
+                    errIdNumber.SetError(txtIdNumber, "Id already taken, please choose a different one.")
+                Else
+                    errIdNumber.SetError(txtIdNumber, Nothing)
+                End If
+            End Using
         End If
     End Sub
 
@@ -219,6 +238,10 @@ Public Class frmVetClinicDb
         End Using
 
         dsOwners.AcceptChanges()
+
+        updatingId = Nothing
+        btnDelete.Enabled = True
+        btnUpdate.Enabled = True
     End Sub
 
     Private Sub toggleEditState(canEdit As Boolean)
@@ -239,6 +262,8 @@ Public Class frmVetClinicDb
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         BindingContext(dsOwners, "Owners").CancelCurrentEdit()
         toggleEditState(False)
+
+        updatingId = Nothing
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
@@ -267,6 +292,7 @@ Public Class frmVetClinicDb
     End Sub
 
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+        updatingId = txtIdNumber.Text
         toggleEditState(True)
     End Sub
 End Class
